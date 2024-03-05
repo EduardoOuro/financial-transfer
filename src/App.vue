@@ -1,15 +1,17 @@
 <template>
+<div class="logo">
   <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+</div>  
+  <FinancialTransfer msg="Lista de Transferências Financeiras"/>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import FinancialTransfer from './components/FinancialTransfer.vue'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    FinancialTransfer
   }
 }
 </script>
@@ -22,5 +24,9 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+
+.logo {
+  background: black
 }
 </style>

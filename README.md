@@ -1,4 +1,4 @@
-# financial-transfer
+# financial-transfer-frontend
 
 ## Project setup
 ```
@@ -14,11 +14,8 @@ npm run serve
 ```
 npm run build
 ```
+### Roda na porta http://localhost:8280/
 
-### Lints and fixes files
-```
-npm run lint
-```
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
