@@ -29,7 +29,7 @@
   </div>
 
     <div class="form-submit">
-      <button type="submit">Agendar Transferência</button>
+      <button type="submit">Agendar Transferência </button>
     </div>
   </form>
     <div v-if="erroEnvio" class="alert-danger" role="alert">
@@ -55,13 +55,13 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(transferencia, index) in transferencias" :key="index">
-          <td>{{ transferencia.contaOrigem }}</td>
-          <td>{{ transferencia.contaDestino }}</td>
-          <td>{{ transferencia.valor }}</td>
-          <td>{{ transferencia.taxa }}</td>
-          <td>{{ transferencia.dataTransferencia }}</td>
-          <td>{{ transferencia.dataAgendamento }}</td>
+        <tr v-for="(history, index) in historyList" :key="index">
+          <td>{{ history.sourceAccount  }}</td>
+          <td>{{ history.destinationAccount  }}</td>
+          <td>{{ history.amount  }}</td>
+          <td>{{ history.tax  }}</td>
+          <td>{{ history.transferDate  }}</td>
+          <td>{{ history.schedulingDate  }}</td>
         </tr>
       </tbody>
     </table>
@@ -69,6 +69,9 @@
 </template>
 
 <script>
+
+import axios from 'axios';
+
 export default {
   name: 'FinancialTransfer',
   props: {
@@ -76,69 +79,7 @@ export default {
   },
     data() {
     return {
-      transferencias: [
-        {
-          contaOrigem: '123456',
-          contaDestino: '654321',
-          valor: 100.00,
-          taxa: 2.50,
-          dataTransferencia: '2024-03-04',
-          dataAgendamento: '2024-03-02'
-        },
-        {
-          contaOrigem: '654321',
-          contaDestino: '789012',
-          valor: 150.00,
-          taxa: 3.00,
-          dataTransferencia: '2024-03-05',
-          dataAgendamento: '2024-03-01'
-        },{
-          contaOrigem: '123456',
-          contaDestino: '654321',
-          valor: 100.00,
-          taxa: 2.50,
-          dataTransferencia: '2024-03-04',
-          dataAgendamento: '2024-03-02'
-        },
-        {
-          contaOrigem: '654321',
-          contaDestino: '789012',
-          valor: 150.00,
-          taxa: 3.00,
-          dataTransferencia: '2024-03-05',
-          dataAgendamento: '2024-03-01'
-        },{
-          contaOrigem: '123456',
-          contaDestino: '654321',
-          valor: 100.00,
-          taxa: 2.50,
-          dataTransferencia: '2024-03-04',
-          dataAgendamento: '2024-03-02'
-        },
-        {
-          contaOrigem: '654321',
-          contaDestino: '789012',
-          valor: 150.00,
-          taxa: 3.00,
-          dataTransferencia: '2024-03-05',
-          dataAgendamento: '2024-03-01'
-        },{
-          contaOrigem: '123456',
-          contaDestino: '654321',
-          valor: 100.00,
-          taxa: 2.50,
-          dataTransferencia: '2024-03-04',
-          dataAgendamento: '2024-03-02'
-        },
-        {
-          contaOrigem: '654321',
-          contaDestino: '789012',
-          valor: 150.00,
-          taxa: 3.00,
-          dataTransferencia: '2024-03-05',
-          dataAgendamento: '2024-03-01'
-        }
-      ],
+      historyList: [],
       transfer: {
         contaOrigem: '',
         contaDestino: '',
@@ -156,18 +97,29 @@ export default {
 
     },
     agendarTransferencia() {
-  this.erroEnvio = true; 
+      this.erroEnvio = true; 
         setTimeout(() => {
           this.erroEnvio = false;
         }, 3000);
     },
+
     toggleTabela() {
       this.mostrarTabela = !this.mostrarTabela;
-
-    if (this.mostrarTabela) {
-    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-  }
+      if (this.mostrarTabela) {
+        this.getTransferencias();
+      }
+    },
+    async getTransferencias() {
+      try {
+        const response = await axios.get('http://localhost:8180/financial-transfer');
+          this.historyList = response.data;
+        return response.data;
+      } catch (error) {
+          console.error('Erro ao buscar transferências:', error);
+        throw error;
+      }
     }
+
   }
 
 }
