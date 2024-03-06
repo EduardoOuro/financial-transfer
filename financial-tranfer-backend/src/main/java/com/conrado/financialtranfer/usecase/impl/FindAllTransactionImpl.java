@@ -12,7 +12,6 @@ import java.util.List;
 public class FindAllTransactionImpl implements FindAllTransaction {
     @Override
     public List<TransactionResultDto> execute(Long number) {
-        System.out.println("AAAAAAA " + number);
         List<TransactionResultDto> resultList = new ArrayList<>();
 
         resultList.add(new TransactionResultDto(
