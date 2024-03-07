@@ -7,24 +7,24 @@
   <div class="container">
     <div class="form-group">
       <label for="contaOrigem">Conta de Origem:</label>
-      <input type="text" id="contaOrigem" v-model="transfer.contaOrigem" required>
+      <input type="text" id="sourceAccount" v-model="transfer.sourceAccount" required>
     </div>
 
     <div class="form-group">
       <label for="contaDestino">Conta de Destino:</label>
-      <input type="text" id="contaDestino" v-model="transfer.contaDestino" required>
+      <input type="text" id="destinationAccount" v-model="transfer.destinationAccount" required>
     </div>
   </div>
     
   <div class="container">
     <div class="form-group">
       <label for="valor">Valor:</label>
-      <input type="number" id="valor" v-model="transfer.valor" required>
+      <input type="number" id="amount" v-model="transfer.amount" required>
     </div>
 
     <div class="form-group">
       <label for="dataTransferencia">Data da Transferência:</label>
-      <input type="date" id="dataTransferencia" v-model="transfer.dataTransferencia" required>
+      <input type="date" id="transferDate" v-model="transfer.transferDate" required>
     </div>
   </div>
 
@@ -33,7 +33,7 @@
     </div>
   </form>
     <div v-if="erroEnvio" class="alert-danger" role="alert">
-      Ocorreu um erro ao enviar a transferência. Por favor, tente novamente.
+      Transferência não permitida: taxa não aplicável!
     </div>
   
     <button class="form-submit" @click="toggleNewTranfer">
@@ -81,10 +81,10 @@ export default {
     return {
       historyList: [],
       transfer: {
-        contaOrigem: '',
-        contaDestino: '',
-        valor: null,
-        dataTransferencia: ''
+        sourceAccount: '',
+        destinationAccount: '',
+        amount: null,
+        transferDate: ''
       },
       erroEnvio: false,
       mostrarTabela: false,
@@ -92,15 +92,22 @@ export default {
     };
   },
   methods: {
-        toggleNewTranfer() {
+    resetForm() {
+      this.transfer = {
+        sourceAccount: '',
+        destinationAccount: '',
+        amount: null,
+        transferDate: ''
+      };
+    },
+    toggleNewTranfer() {
       this.newTranfer = !this.newTranfer;
 
     },
     agendarTransferencia() {
-      this.erroEnvio = true; 
-        setTimeout(() => {
-          this.erroEnvio = false;
-        }, 3000);
+       
+      this. createNewTrasaction();
+      
     },
     toggleTabela() {
       this.mostrarTabela = !this.mostrarTabela;
@@ -117,6 +124,37 @@ export default {
           console.error('Erro ao buscar transferências:', error);
         throw error;
       }
+    },
+
+   async createNewTrasaction() {
+    try {
+      const response = await axios.post(`http://localhost:8180/financial-transfer/create?sourceAccount=${this.transfer.sourceAccount}&destinationAccount=${this.transfer.destinationAccount}&amount=${this.transfer.amount}&transferDate=${this.transfer.transferDate}`);
+    
+      if(response.status == 200) {
+        this.resetForm();
+        this.historyList.push(response.data);
+      /* setTimeout(() => {
+          this.getTransferencias();
+            
+          }, 3000);*/
+      
+    } 
+    
+    if(response.status == 204) {
+      this.erroEnvio = true;
+      setTimeout(() => {
+          this.erroEnvio = false;
+          
+        }, 3000);
+    }
+
+    
+  } catch (error) {
+    console.error('Erro ao criar transferência:', error);
+   
+    throw error;
+  }
+
     }
 
   }
