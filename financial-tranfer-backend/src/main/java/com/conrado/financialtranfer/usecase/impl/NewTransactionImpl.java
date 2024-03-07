@@ -25,7 +25,7 @@ public class NewTransactionImpl implements NewTransaction {
             return new TransactionResultDto(
                     dto.getSourceAccount(),
                     dto.getDestinationAccount(),
-                    dto.getAmount(),
+                    dto.getAmount().setScale(2, RoundingMode.HALF_UP),
                     valueFee,
                     dto.getTransferDate(),
                     LocalDate.now()
