@@ -38,25 +38,30 @@ public class TransferController {
             @RequestParam BigDecimal amount,
             @RequestParam String transferDate
     ) {
+        try{
+            String[] parts = transferDate.split("-");
 
-        String[] parts = transferDate.split("-");
+            int year = Integer.parseInt(parts[0]);
+            int month = Integer.parseInt(parts[1]);
+            int day = Integer.parseInt(parts[2]);
 
-        int year = Integer.parseInt(parts[0]);
-        int month = Integer.parseInt(parts[1]);
-        int day = Integer.parseInt(parts[2]);
+            LocalDate data = LocalDate.of(year, month, day);
 
-        LocalDate data = LocalDate.of(year, month, day);
+            TransactionDto dto = new TransactionDto(
+                    sourceAccount,
+                    destinationAccount,
+                    amount,
+                    data
+            );
 
-        TransactionDto dto = new TransactionDto(
-                sourceAccount,
-                destinationAccount,
-                amount,
-                data
-        );
-
-       TransactionResultDto transfer =
-                newTransaction.execute(dto);
-        return new ResponseEntity<>(transfer, HttpStatus.OK);
+            TransactionResultDto transfer =
+                    newTransaction.execute(dto);
+            return new ResponseEntity<>(transfer, HttpStatus.OK);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
     }
 
 }
