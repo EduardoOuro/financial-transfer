@@ -47,7 +47,6 @@ public class NewTransactionImpl implements NewTransaction {
 
         } else if (daysUntilTransfer >= 0 && daysUntilTransfer <= 10) {
             valueFee = BigDecimal.valueOf(12.00);
-            valueFee = valueFee.add(amount.multiply(BigDecimal.valueOf(0.025)));
 
         } else if (daysUntilTransfer >= 11 && daysUntilTransfer <= 20) {
             valueFee = amount.multiply(BigDecimal.valueOf(0.082));
